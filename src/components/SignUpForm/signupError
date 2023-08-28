@@ -1,0 +1,70 @@
+Warning: A component is changing a controlled input to be uncontrolled. This is likely caused by the value changing from a defined to undefined, which should not happen. Decide between using a controlled or uncontrolled input element for the lifetime of the component.
+
+At first glance there are many solutions you may have stumbled upon.
+
+In controlled forms, you may have forgotten to passed on a default value in your useState such as this:
+
+const [user, setUser] = useState()
+
+So, we fix this by adding a default value.
+
+OR
+
+We can add the || operator in each value for the input fields such as:
+value={formData.name || ''}
+value={formData.email || ''}
+value={formData.password || ''}
+value={formData.confirm || ''}
+
+HOWEVER
+
+You can see that our state DOES have an initial value of an object with key value pairs set to empty strings.
+
+SOLUTION!
+
+In our Try Catch for handleSubmit, we forgot to spread our state when setting the error. :) As you can see we only get that controlled/uncontrolled error when we fail signing up.
+
+setFormData({...formData, error: 'Sign Up Failed - Try Again'})
+
+I added a console.log(formData) in JSX to see our state on mount.
+
+Like this...
+return (
+    <div>
+      {console.log(formData)}
+      <div className="form-container">
+        <form autoComplete="off" onSubmit={handleSubmit}>
+...
+
+When the component mounts, I saw this in the console:
+{name: '', email: '', password: '', confirm: '', error: ''}
+
+HOWEVER,
+
+When we fail sign up you will get that error we were getting because we are replacing the whole state with just the error state.
+
+{error: 'Sign Up Failed - Try Again'}
+
+and it removes name, email, password, and confirm
+
+1) Don't spread formData when setting error
+
+setFormData({error: 'Sign Up Failed - Try Again'})
+
+2) Turn off your backend server but keep your front end server running.
+3) This will cause your sign up to fail and you will get that uncontrolled error. 
+4) Your console will display 500 internal server error and console will say:
+
+{error: 'Sign Up Failed - Try Again'}
+
+Now
+
+1) Spread the formData when setting error
+
+setFormData({...formData, error: 'Sign Up Failed - Try Again'})
+
+2) With your backend still off, and front end running. Submit a sign up request.
+3) You will get a 500 error, since our backend is off.
+4) However, we will not get the uncontrolled error and our console will display:
+
+{name: 'teo', email: 'teo@teo.com', password: 'teo', confirm: 'teo', error: 'Sign Up Failed - Try Again'}

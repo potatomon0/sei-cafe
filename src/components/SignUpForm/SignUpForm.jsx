@@ -60,88 +60,152 @@
 
 //=====================================================================================
 
-import React, { useState } from 'react'
-import { signUp } from '../../utilities/users-service'
+// import React, { useState } from 'react'
+// import { signUp } from '../../utilities/users-service'
 
-function SignUpForm() {
-    const [form, setForm] = useState({
+// function SignUpForm() {
+//     const [form, setForm] = useState({
+//         name: '',
+//         email: '',
+//         password: '',
+//         confirm: '',
+//         error: ''
+//     })
+//     // const [name, setName] = useState('')
+//     // const [email, setEmail] = useState('')
+//     // const [password, setPassword] = useState('')
+//     // const [confirm, setConfirm] = useState('')
+//     // const [error, setError] = useState('')
+
+//     const handleChange = (e) => {
+//         setForm({
+//             ...form,
+//             [e.target.name]: e.target.value
+//         })
+//     }
+
+//     const handleSubmit = async (e) => {
+//         e.preventDefault()
+//         try {
+//             // We don't want to send the 'error' or 'confirm' property,
+//             //  so let's make a copy of the state object, then delete them
+//             // const form = { ...form};//this will not work because form is a state variable
+//             setForm({ ...form })
+//             delete form.error;
+//             delete form.confirm;
+//             //or
+//             // const {name, email, password} = form
+//             // console.log('in handleSubmit', form)
+//             // The promise returned by the signUp service method
+//             // will resolve to the user object included in the
+//             // payload of the JSON Web Token (JWT)
+//             const user = await signUp(form)
+//         } catch (err) {
+//             setForm({...form,  error: 'Sign Up Failed - Try Again' })//if we don't spread the form state, we will end up replacing the object format with just the error. Which result in the uncontrolled state error
+//         }
+//     }
+//     // const handleSubmit = async (e) => {
+//     //     // Prevent form from being submitted to the server
+//     //     e.preventDefault()
+//     //     try {
+//     //         // We don't want to send the 'error' or 'confirm' property,
+//     //         // so let's make a copy of the state object, then delete them
+//     //         const newFormData = { ...form };
+//     //         delete newFormData.error;
+//     //         delete newFormData.confirm;
+//     //         // or
+//     //         // const {name, email, password} = formData
+
+//     //         const user = await signUp(newFormData)
+//     //         console.log(user)
+//     //     } catch (err) {
+//     //         // An error occurred
+//     //         setFormD({ error: 'Sign Up Failed - Try Again' })
+//     //     }
+//     // }
+//     const disable = form.password !== form.confirm
+//     return (
+//         <div>
+//             <div className="form-container">
+//                 <form autoComplete='off' onSubmit={handleSubmit}>
+//                     <label>Name</label>
+//                     <input type="text" name="name" value={form.name} onChange={handleChange} required />
+//                     <label>Email</label>
+//                     <input type="email" name="email" value={form.email} onChange={handleChange} required />
+//                     <label>Password</label>
+//                     <input type="password" name="password" value={form.password} onChange={handleChange} required />
+//                     <label>Confirm</label>
+//                     <input type="password" name="confirm" value={form.confirm} onChange={handleChange} required />
+//                     <button type='submit' disabled={disable}>Sign Up</button>
+//                 </form>
+//             </div>
+//             <p className="error-message">&nbsp;{form.error}</p>
+//         </div>
+//     )
+// }
+
+// export default SignUpForm
+
+//======================================================================
+
+import { useState } from 'react'
+import { signUp } from "../../utilities/users-service";
+
+export default function SignUpForm() {
+    const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
         confirm: '',
         error: ''
-    })
-    // const [name, setName] = useState('')
-    // const [email, setEmail] = useState('')
-    // const [password, setPassword] = useState('')
-    // const [confirm, setConfirm] = useState('')
-    // const [error, setError] = useState('')
+    });
+
+    const disable = formData.password !== formData.confirm
 
     const handleChange = (e) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value
-        })
-    }
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        });
+    };
 
     const handleSubmit = async (e) => {
+        // Prevent form from being submitted to the server
         e.preventDefault()
         try {
             // We don't want to send the 'error' or 'confirm' property,
-            //  so let's make a copy of the state object, then delete them
-            // const form = { ...form};//this will not work because form is a state variable
-            setForm({ ...form })
-            delete form.error;
-            delete form.confirm;
-            //or
-            // const {name, email, password} = form
-            // console.log('in handleSubmit', form)
-            // The promise returned by the signUp service method
-            // will resolve to the user object included in the
-            // payload of the JSON Web Token (JWT)
-            const user = await signUp(form)
+            // so let's make a copy of the state object, then delete them
+            const newFormData = { ...formData };
+            delete newFormData.error;
+            delete newFormData.confirm;
+            // or
+            // const {name, email, password} = formData
+
+            const user = await signUp(newFormData)
+            console.log(user)
         } catch (err) {
-            setForm({ error: 'Sign Up Failed - Try Again' })
+            // An error occurred
+            setFormData({ ...formData, error: 'Sign Up Failed - Try Again' })
         }
     }
-    // const handleSubmit = async (e) => {
-    //     // Prevent form from being submitted to the server
-    //     e.preventDefault()
-    //     try {
-    //         // We don't want to send the 'error' or 'confirm' property,
-    //         // so let's make a copy of the state object, then delete them
-    //         const newFormData = { ...form };
-    //         delete newFormData.error;
-    //         delete newFormData.confirm;
-    //         // or
-    //         // const {name, email, password} = formData
 
-    //         const user = await signUp(newFormData)
-    //         console.log(user)
-    //     } catch (err) {
-    //         // An error occurred
-    //         setFormD({ error: 'Sign Up Failed - Try Again' })
-    //     }
-    // }
-    const disable = form.password !== form.confirm
     return (
         <div>
+            {console.log(formData)}
             <div className="form-container">
-                <form autoComplete='off' onSubmit={handleSubmit}>
+                <form autoComplete="off" onSubmit={handleSubmit}>
                     <label>Name</label>
-                    <input type="text" name="name" value={form.name} onChange={handleChange} required />
+                    <input type="text" name="name" value={formData.name} onChange={handleChange} required />
                     <label>Email</label>
-                    <input type="email" name="email" value={form.email} onChange={handleChange} required />
+                    <input type="email" name="email" value={formData.email} onChange={handleChange} required />
                     <label>Password</label>
-                    <input type="password" name="password" value={form.password} onChange={handleChange} required />
+                    <input type="password" name="password" value={formData.password} onChange={handleChange} required />
                     <label>Confirm</label>
-                    <input type="password" name="confirm" value={form.confirm} onChange={handleChange} required />
-                    <button type='submit' disabled={disable}>Sign Up</button>
+                    <input type="password" name="confirm" value={formData.confirm} onChange={handleChange} required />
+                    <button type="submit" disabled={disable}>SIGN UP</button>
                 </form>
             </div>
-            <p className="error-message">&nbsp;{form.error}</p>
+            <p className="error-message">&nbsp;{formData.error}</p>
         </div>
     )
 }
-
-export default SignUpForm

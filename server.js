@@ -21,7 +21,7 @@ app.use('/api/users', require('./routes/api/users'));
 //----Catch All Route------------------
 // The following "catch all" route (note the *) is necessary
 // to return the index.html from build on all non-AJAX requests
-// * stand for 'any'
+// // * stand for 'any'
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
