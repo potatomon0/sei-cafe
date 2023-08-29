@@ -3,6 +3,7 @@
 // Send the JWT to the client using res.json()
 const User = require('../../models/User')//get schema
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 const create = async (req, res) => {
     // res.json({
@@ -26,6 +27,22 @@ const create = async (req, res) => {
         res.status(400).json(err);
     }
 }
+
+const login =async(req,res)=>{
+    try{
+        //Find the user by their email with find() (return multiple if duplicate) or findOne() (return first one that is found)
+        const user =await User.findOne({email:req.body.email})
+        const isMatch = await bcrypt.compare(req.body.password, user.password)
+        if(!isMatch){
+            throw new Error()
+        }
+        res.status(200).json(createJWT(user))
+        
+    }catch(err){
+        res.status(400).json({msg: err.message, reason: 'Bad Credentials'}) //return error in json object containing msg and reason
+    }
+}
+
 function createJWT(user) {
     return jwt.sign(
         { user },//user object as payload
@@ -35,5 +52,10 @@ function createJWT(user) {
 
 }
 
+function checkToken(req,res){
+    //req.user will always be there for you when a token is sent
+    console.log('req.user',req.user)
+    res.json(req.exp)
+}
 
-module.exports = { create, }
+module.exports = { create, login, checkToken}

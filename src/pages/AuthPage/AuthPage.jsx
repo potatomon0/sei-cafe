@@ -3,16 +3,17 @@ import LoginForm from '../../components/LoginForm/LoginForm'
 import React, { useState } from 'react';
 
 
-export default function AuthPage() {
-  const [isLoggingIn, setIsLoggingIn] = useState(false)
+export default function AuthPage({user,setUser}) {
+  const [showLogin, setShowLogin] = useState(false)
+
   return (
     <main>
       <h1>Auth Page</h1>
-      {isLoggingIn ? <LoginForm /> :
-        <SignUpForm />}
+      {showLogin ? <LoginForm setUser={setUser}/> :
+        <SignUpForm setUser={setUser}/>}
       <button onClick={()=>{
-        setIsLoggingIn(!isLoggingIn)
-      }}>{isLoggingIn ? 'Would you like to signup?':'Already had an account?'}</button>
+        setShowLogin(!showLogin)
+      }}>{showLogin ? 'Sign Up':'Login'}</button>
     </main>
   )
 }

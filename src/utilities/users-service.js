@@ -1,6 +1,8 @@
 //ajax HTTP request: try catch async await
 //SPA communicate via AJAX
 import * as usersAPI from './users-api'
+// import {getToken} from './users-service'
+
 
 export async function signUp(userData) {
     // Delegate the network request code to the users-api.js API module
@@ -13,7 +15,7 @@ export async function signUp(userData) {
     //Persist the 'token'
     localStorage.setItem('token', token)//create a key value pair object in local storage
     //this can be checked in developer tool --> Application --> LocalStorage
-    return token
+    return getUser()
 }
 
 // Retrieve the token from localStorage.
@@ -43,9 +45,21 @@ export function getUser() {
     //check if token is valid with getToken then if truthy parse/decoded payload
 }
 
-export function logOut(){
+export function logOut() {
     localStorage.removeItem('token')
 }
-export function login(credentials){
+export async function login(credentials) {//we need async to communicate with our backend
     console.log(credentials)
+    const token = await usersAPI.login(credentials)
+    localStorage.setItem('token', token)//setter function, getter function
+    return getUser()
+}
+
+export async function checkToken() {
+    // alert('clicked')
+    // Just so that you don't forget how to use .then
+
+    return usersAPI.checkToken().then((dateStr) => new Date(dateStr) )
+    // checkToken returns a string, but let's
+    // make it a Date object for more flexibility
 }

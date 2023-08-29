@@ -14,7 +14,9 @@ app.use(express.json());//have express work with JSON
 // to serve from the production 'build' folder
 app.use(favicon(path.join(__dirname, 'build', 'favicon.ico')));//accesss certain favicon.icon
 app.use(express.static(path.join(__dirname, 'build')));
-
+// Middleware to verify token and assign user object of payload to req.user.
+// Be sure to mount before routes
+app.use(require('./config/checkToken'));
 // Put API routes here, before the "catch all" route
 app.use('/api/users', require('./routes/api/users'));
 
